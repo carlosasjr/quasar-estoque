@@ -53,6 +53,12 @@ module.exports = configure(function (/* ctx */) {
         node: "node16",
       },
 
+      env: {
+        SUPABASE_URL: "https://clyvwektjldrmrsoxbkb.supabase.co",
+        SUPABASE_KEY:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNseXZ3ZWt0amxkcm1yc294YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjkyOTI5MTAsImV4cCI6MTk4NDg2ODkxMH0.Iqq9TulbTVVvhBvMEbr1Vj0Mhq5N33zYqpK7RJKW8EY",
+      },
+
       vueRouterMode: "history", // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,

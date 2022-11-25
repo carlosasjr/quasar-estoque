@@ -1,9 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import useAuthUser from "src/composables/UseAuthUser";
 
-const supabaseUrl = "https://clyvwektjldrmrsoxbkb.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNseXZ3ZWt0amxkcm1yc294YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjkyOTI5MTAsImV4cCI6MTk4NDg2ODkxMH0.Iqq9TulbTVVvhBvMEbr1Vj0Mhq5N33zYqpK7RJKW8EY";
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 supabase.auth.onAuthStateChange((event, session) => {

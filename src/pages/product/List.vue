@@ -10,6 +10,15 @@
       >
         <template v-slot:top>
           <span class="text-h6">{{ data.title }}</span>
+          <q-btn
+            label="My Store"
+            dense
+            size="sm"
+            outline
+            class="q-ml-sm"
+            @click="handleGoToMyStore"
+            icon="store"
+          />
           <q-space />
           <q-btn
             v-if="$q.platform.is.desktop"
@@ -72,6 +81,7 @@ import { useQuasar } from "quasar";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
 import { columns } from "./ColumnsTable";
+import useAuthUser from "src/composables/UseAuthUser";
 
 export default defineComponent({
   name: "PageProduct",
@@ -81,9 +91,10 @@ export default defineComponent({
     });
 
     const { notifyError, notifySuccess } = useNotify();
-    const { list, remove } = useApi();
+    const { listByUser, remove } = useApi();
     const router = useRouter();
     const $q = useQuasar();
+    const { user } = useAuthUser();
 
     const data = reactive({
       title: "Products",
@@ -96,7 +107,7 @@ export default defineComponent({
     const handleList = async () => {
       try {
         data.loading = true;
-        data.list = await list(data.resource);
+        data.list = await listByUser(data.resource, user.value.id);
       } catch (error) {
         notifyError(error.message);
       } finally {
@@ -125,11 +136,16 @@ export default defineComponent({
       }
     };
 
+    const handleGoToMyStore = () => {
+      router.push({ name: "product-public", params: { id: user.value.id } });
+    };
+
     return {
       columns,
       data,
       handleEdit,
       handleRemove,
+      handleGoToMyStore,
     };
   },
 });

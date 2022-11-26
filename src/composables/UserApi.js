@@ -14,6 +14,17 @@ export default function useApi() {
     return data;
   };
 
+  const listByUser = async (table, user_id) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select("*")
+      .eq("user_id", user_id);
+
+    if (error) throw error;
+
+    return data;
+  };
+
   const getById = async (table, id) => {
     let { data, error } = await supabase.from(table).select("*").eq("id", id);
 
@@ -79,6 +90,7 @@ export default function useApi() {
 
   return {
     list,
+    listByUser,
     getById,
     post,
     update,

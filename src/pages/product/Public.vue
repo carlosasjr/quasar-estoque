@@ -35,7 +35,11 @@
             leave-active-class="animated fadeOutRight"
           >
             <div class="q-pa-xs col-xs-12 col-sm-6 col-md-3" key="card">
-              <q-card class="cursor-pointer" v-ripple:primary>
+              <q-card
+                class="cursor-pointer"
+                v-ripple:primary
+                @click="handleShowDetails(props.row)"
+              >
                 <q-img :src="props.row.img_url" :ratio="4 / 3" />
                 <q-card-section class="text-center">
                   <div class="text-h6">{{ props.row.name }}</div>
@@ -61,6 +65,12 @@
           </transition-group>
         </template>
       </q-table>
+
+      <dialog-product-details
+        :show="data.showDialogDetails"
+        :product="data.productDetails"
+        @hideDialog="data.showDialogDetails = false"
+      />
     </div>
   </q-page>
 </template>
@@ -71,9 +81,15 @@ import useNotify from "src/composables/UseNotify";
 import { columns } from "./ColumnsTable";
 import { useRoute } from "vue-router";
 import { formatCurrency } from "src/utils/format";
+import DialogProductDetails from "components/DialogProductDetails.vue";
 
 export default defineComponent({
   name: "PageProductPublic",
+
+  components: {
+    DialogProductDetails,
+  },
+
   setup() {
     onMounted(() => {
       if (route.params.id) {
@@ -92,6 +108,8 @@ export default defineComponent({
       routeName: "form-product",
       list: [],
       filter: "",
+      showDialogDetails: false,
+      productDetails: {},
     });
 
     const handleList = async (userId) => {
@@ -105,10 +123,16 @@ export default defineComponent({
       }
     };
 
+    const handleShowDetails = (product) => {
+      data.productDetails = product;
+      data.showDialogDetails = true;
+    };
+
     return {
       columns,
       data,
       formatCurrency,
+      handleShowDetails,
     };
   },
 });

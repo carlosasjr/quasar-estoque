@@ -83,8 +83,6 @@ export default function useApi() {
       .getPublicUrl(fileName);
     if (error) throw error;
 
-    console.log(publicURL);
-
     return publicURL;
   };
 

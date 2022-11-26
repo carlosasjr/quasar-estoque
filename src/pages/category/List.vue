@@ -12,6 +12,7 @@
           <span class="text-h6">{{ data.title }}</span>
           <q-space />
           <q-btn
+            v-if="$q.platform.is.desktop"
             :to="{ name: data.routeName }"
             dense
             label="Add New"
@@ -46,6 +47,13 @@
         </template>
       </q-table>
     </div>
+    <q-page-sticky
+      v-if="$q.platform.is.mobile"
+      position="bottom-right"
+      :offset="[18, 18]"
+    >
+      <q-btn fab icon="add" color="primary" :to="{ name: data.routeName }" />
+    </q-page-sticky>
   </q-page>
 </template>
 <script>

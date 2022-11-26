@@ -7,7 +7,7 @@
         <q-input
           type="email"
           label="Email"
-          v-model="form.email"
+          v-model="data.email"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']"
         />
@@ -39,7 +39,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { ref } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import useAuthUser from "src/composables/UseAuthUser";
 import useNotify from "src/composables/UseNotify";
@@ -52,14 +52,14 @@ export default defineComponent({
     const { sendPasswordRestEmail } = useAuthUser();
     const router = useRouter();
 
-    const form = ref({
+    const data = reactive({
       email: "",
     });
 
     const handleForgot = async () => {
       try {
-        await sendPasswordRestEmail(form.value.email);
-        notifySuccess(`Send email to ${form.value.email}`);
+        await sendPasswordRestEmail(data.email);
+        notifySuccess(`Send email to ${data.email}`);
         router.replace({
           name: "login",
         });
@@ -69,7 +69,7 @@ export default defineComponent({
     };
 
     return {
-      form,
+      data,
       handleForgot,
     };
   },

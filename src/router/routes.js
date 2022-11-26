@@ -51,6 +51,12 @@ const routes = [
         name: "category",
         component: () => import("pages/category/List.vue"),
       },
+
+      {
+        path: "form-category/:id?",
+        name: "form-category",
+        component: () => import("pages/category/Form.vue"),
+      },
     ],
     meta: {
       requiresAuth: true,

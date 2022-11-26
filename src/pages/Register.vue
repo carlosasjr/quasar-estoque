@@ -6,21 +6,21 @@
       <div class="col-md-4 col-sm-6 col-xs-10 q-gutter-y-md">
         <q-input
           label="Name"
-          v-model="form.name"
+          v-model="data.name"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Name is required']"
         />
         <q-input
           type="email"
           label="Email"
-          v-model="form.email"
+          v-model="data.email"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']"
         />
         <q-input
           type="password"
           label="Senha"
-          v-model="form.password"
+          v-model="data.password"
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || 'Password is required',
@@ -57,7 +57,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { ref } from "vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import useAuthUser from "src/composables/UseAuthUser";
 import useNotify from "src/composables/UseNotify";
@@ -70,7 +70,7 @@ export default defineComponent({
     const router = useRouter();
     const { notifyError, notifySuccess } = useNotify();
 
-    const form = ref({
+    const data = reactive({
       name: "",
       email: "",
       password: "",
@@ -78,11 +78,11 @@ export default defineComponent({
 
     const handleRegister = async () => {
       try {
-        await register(form.value);
+        await register(data);
         notifySuccess("Registered successfully");
         router.push({
           name: "email-confirmation",
-          query: { email: form.value.email },
+          query: { email: data.email },
         });
       } catch (error) {
         notifyError(error.message);
@@ -90,7 +90,7 @@ export default defineComponent({
     };
 
     return {
-      form,
+      data,
       handleRegister,
     };
   },

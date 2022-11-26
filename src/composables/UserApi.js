@@ -6,7 +6,7 @@ export default function useApi() {
   const { user } = useAuthUser();
 
   const list = async (table) => {
-    let { data, error } = await supabase.from(table).select("*");
+    const { data, error } = await supabase.from(table).select("*");
 
     if (error) throw error;
 

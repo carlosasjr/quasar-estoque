@@ -3,20 +3,34 @@
     <div class="row">
       <q-table
         title="Category"
-        :rows="categories"
+        :rows="data.categories"
         :columns="columns"
         row-key="id"
         class="col-12"
+        :loading="data.loading"
       >
         <template v-slot:top>
           <span class="text-h6">Category</span>
           <q-space />
-          <q-btn label="Add New" color="primary" />
+          <q-btn
+            :to="{ name: 'form-category' }"
+            dense
+            label="Add New"
+            color="primary"
+            icon="add"
+          />
         </template>
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn flat dense size="sm" color="info" icon="edit">
+            <q-btn
+              flat
+              dense
+              size="sm"
+              color="info"
+              icon="edit"
+              @click="handleEdit(props.row)"
+            >
               <q-tooltip>Edit</q-tooltip>
             </q-btn>
             <q-btn flat dense size="sm" color="negative" icon="delete">
@@ -53,9 +67,10 @@ const columns = [
   },
 ];
 
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "PageCategory",
@@ -65,20 +80,34 @@ export default defineComponent({
     });
 
     const { notifyError } = useNotify();
-    const categories = ref([]);
     const { list } = useApi();
+    const router = useRouter();
+
+    const data = reactive({
+      loading: true,
+      resource: "categories",
+      categories: [],
+    });
 
     const handleListCategories = async () => {
       try {
-        categories.value = await list("categories");
+        data.loading = true;
+        data.categories = await list(data.resource);
       } catch (error) {
         notifyError(error.message);
+      } finally {
+        data.loading = false;
       }
+    };
+
+    const handleEdit = (category) => {
+      router.push({ name: "form-category", params: { id: category.id } });
     };
 
     return {
       columns,
-      categories,
+      data,
+      handleEdit,
     };
   },
 });

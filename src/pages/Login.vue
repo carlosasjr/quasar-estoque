@@ -7,14 +7,14 @@
         <q-input
           type="email"
           label="Email"
-          v-model="form.email"
+          v-model="data.email"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']"
         />
         <q-input
           type="password"
           label="Senha"
-          v-model="form.password"
+          v-model="data.password"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Password is required']"
         />
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, reactive, onMounted } from "vue";
 import useAuthUser from "src/composables/UseAuthUser";
 import useNotify from "src/composables/UseNotify";
 import { useRouter } from "vue-router";
@@ -76,14 +76,14 @@ export default defineComponent({
     const { login, isLoggedIn } = useAuthUser();
     const { notifyError, notifySuccess } = useNotify();
 
-    const form = ref({
+    const data = reactive({
       email: "",
       password: "",
     });
 
     const handleLogin = async () => {
       try {
-        await login(form.value);
+        await login(data);
         notifySuccess("Login successfully!");
         router.push({ name: "me" });
       } catch (error) {
@@ -92,7 +92,7 @@ export default defineComponent({
     };
 
     return {
-      form,
+      data,
       handleLogin,
     };
   },

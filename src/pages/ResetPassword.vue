@@ -7,7 +7,7 @@
         <q-input
           type="password"
           label="New Password"
-          v-model="form.newPassword"
+          v-model="data.newPassword"
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || 'Password is required',
@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { ref } from "vue";
+import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import useAuthUser from "src/composables/UseAuthUser";
 import useNotify from "src/composables/UseNotify";
@@ -47,13 +46,13 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify();
     const router = useRouter();
 
-    const form = ref({
+    const data = reactive({
       newPassword: "",
     });
 
     const handleResetPassword = async () => {
       try {
-        await resetPassword(form.value.newPassword);
+        await resetPassword(data.newPassword);
         notifySuccess("New password create successfully");
 
         router.replace({
@@ -65,7 +64,7 @@ export default defineComponent({
     };
 
     return {
-      form,
+      data,
       handleResetPassword,
     };
   },

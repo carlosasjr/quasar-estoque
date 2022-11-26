@@ -7,7 +7,7 @@ export default function useAuthUser() {
   const { supabase } = useSupabase();
 
   const login = async ({ email, password }) => {
-    const { user, error } = await supabase.auth.signInWithPassword({
+    const { user, error } = await supabase.auth.signIn({
       email,
       password,
     });
@@ -17,7 +17,7 @@ export default function useAuthUser() {
   };
 
   const loginWithSocialProvider = async (provider) => {
-    const { user, error } = await supabase.auth.signInWithPassword({
+    const { user, error } = await supabase.auth.signIn({
       provider,
     });
 
@@ -58,15 +58,17 @@ export default function useAuthUser() {
   };
 
   const sendPasswordRestEmail = async (email) => {
-    const { user, error } = await supabase.auth.resetPasswordForEmail(email);
+    const { user, error } = await supabase.auth.api.resetPasswordForEmail(
+      email
+    );
 
     if (error) throw error;
 
     return user;
   };
 
-  const resetPassword = async (newPassword) => {
-    const { user, error } = await supabase.auth.updateUser({
+  const resetPassword = async (accessToken, newPassword) => {
+    const { user, error } = await supabase.auth.api.updateUser(accessToken, {
       password: newPassword,
     });
 

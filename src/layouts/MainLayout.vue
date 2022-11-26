@@ -61,6 +61,11 @@ const linksList = [
     icon: "category",
     to: "category",
   },
+  {
+    title: "Product",
+    icon: "store",
+    to: "product",
+  },
 ];
 
 export default defineComponent({

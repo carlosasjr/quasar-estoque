@@ -34,7 +34,7 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import useAuthUser from "src/composables/UseAuthUser";
 import useNotify from "src/composables/UseNotify";
 
@@ -45,6 +45,8 @@ export default defineComponent({
     const { resetPassword } = useAuthUser();
     const { notifyError, notifySuccess } = useNotify();
     const router = useRouter();
+    const route = useRoute();
+    const token = route.query.token;
 
     const data = reactive({
       newPassword: "",
@@ -52,7 +54,7 @@ export default defineComponent({
 
     const handleResetPassword = async () => {
       try {
-        await resetPassword(data.newPassword);
+        await resetPassword(token, data.newPassword);
         notifySuccess("New password create successfully");
 
         router.replace({

@@ -21,6 +21,15 @@
           />
         </template>
 
+        <template v-slot:body-cell-img_url="props">
+          <q-td :props="props" class="q-gutter-x-sm">
+            <q-avatar v-if="props.row.img_url">
+              <img :src="props.row.img_url" :alt="props.row.name" />
+            </q-avatar>
+            <q-avatar v-else color="grey" text-color="white" icon="image" />
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-x-sm">
             <q-btn
@@ -65,7 +74,7 @@ import useNotify from "src/composables/UseNotify";
 import { columns } from "./ColumnsTable";
 
 export default defineComponent({
-  name: "PageCategory",
+  name: "PageProduct",
   setup() {
     onMounted(() => {
       handleList();
@@ -77,10 +86,10 @@ export default defineComponent({
     const $q = useQuasar();
 
     const data = reactive({
-      title: "Categories",
+      title: "Products",
       loading: true,
-      resource: "categories",
-      routeName: "form-category",
+      resource: "products",
+      routeName: "form-product",
       list: [],
     });
 

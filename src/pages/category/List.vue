@@ -2,18 +2,17 @@
   <q-page padding>
     <div class="row">
       <q-table
-        title="Category"
-        :rows="data.categories"
+        :rows="data.list"
         :columns="columns"
         row-key="id"
         class="col-12"
         :loading="data.loading"
       >
         <template v-slot:top>
-          <span class="text-h6">Category</span>
+          <span class="text-h6">{{ data.title }}</span>
           <q-space />
           <q-btn
-            :to="{ name: 'form-category' }"
+            :to="{ name: data.routeForm }"
             dense
             label="Add New"
             color="primary"
@@ -33,7 +32,14 @@
             >
               <q-tooltip>Edit</q-tooltip>
             </q-btn>
-            <q-btn flat dense size="sm" color="negative" icon="delete">
+            <q-btn
+              flat
+              dense
+              size="sm"
+              color="negative"
+              icon="delete"
+              @click="handleRemove(props.row)"
+            >
               <q-tooltip>Delete</q-tooltip>
             </q-btn>
           </q-td>
@@ -60,7 +66,7 @@ const columns = [
   },
   {
     name: "actions",
-    align: "rigth",
+    align: "left",
     label: "Actions",
     field: "actions",
     sortable: false,
@@ -71,28 +77,32 @@ import { defineComponent, reactive, onMounted } from "vue";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "PageCategory",
   setup() {
     onMounted(() => {
-      handleListCategories();
+      handleList();
     });
 
-    const { notifyError } = useNotify();
-    const { list } = useApi();
+    const { notifyError, notifySuccess } = useNotify();
+    const { list, remove } = useApi();
     const router = useRouter();
+    const $q = useQuasar();
 
     const data = reactive({
+      title: "Categories",
       loading: true,
       resource: "categories",
-      categories: [],
+      routeForm: "form-category",
+      list: [],
     });
 
-    const handleListCategories = async () => {
+    const handleList = async () => {
       try {
         data.loading = true;
-        data.categories = await list(data.resource);
+        data.list = await list(data.resource);
       } catch (error) {
         notifyError(error.message);
       } finally {
@@ -100,14 +110,32 @@ export default defineComponent({
       }
     };
 
-    const handleEdit = (category) => {
-      router.push({ name: "form-category", params: { id: category.id } });
+    const handleEdit = (row) => {
+      router.push({ name: data.routeForm, params: { id: row.id } });
+    };
+
+    const handleRemove = async (row) => {
+      try {
+        $q.dialog({
+          title: "Confirm",
+          message: "Do you really delete?",
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          await remove(data.resource, row.id);
+          notifySuccess("Successfully deleted");
+          handleList();
+        });
+      } catch (error) {
+        notifyError(error.message);
+      }
     };
 
     return {
       columns,
       data,
       handleEdit,
+      handleRemove,
     };
   },
 });

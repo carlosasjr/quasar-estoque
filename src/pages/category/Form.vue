@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="row justify-center">
       <div class="col-12 text-center">
-        <p class="text-h6">Form Category</p>
+        <p class="text-h6">{{ data.title }}</p>
       </div>
       <q-form
         class="col-md-7 col-xs-12 col-sm-12 q-gutter-y-md"
@@ -61,22 +61,23 @@ export default defineComponent({
 
     onMounted(() => {
       if (isUpdate.value) {
-        handleGetCategory(isUpdate.value);
+        handleGet(isUpdate.value);
       }
     });
 
     const data = reactive({
+      title: "Form Category",
       loading: false,
       resource: "categories",
+      routeName: "category",
       form: {
         name: "",
       },
     });
 
-    const handleGetCategory = async (id) => {
+    const handleGet = async (id) => {
       try {
-        let category = await getById(data.resource, id);
-        data.form = category;
+        data.form = await getById(data.resource, id);
       } catch (error) {
         notifyError(error.message);
       }
@@ -94,7 +95,7 @@ export default defineComponent({
           notifySuccess("Saved successfully");
         }
 
-        router.push({ name: "category" });
+        router.push({ name: data.routeName });
       } catch (error) {
         notifyError(error.message);
       } finally {

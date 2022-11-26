@@ -12,7 +12,7 @@
           <span class="text-h6">{{ data.title }}</span>
           <q-space />
           <q-btn
-            :to="{ name: data.routeForm }"
+            :to="{ name: data.routeName }"
             dense
             label="Add New"
             color="primary"
@@ -74,10 +74,10 @@ const columns = [
 ];
 
 import { defineComponent, reactive, onMounted } from "vue";
-import useApi from "src/composables/UserApi";
-import useNotify from "src/composables/UseNotify";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import useApi from "src/composables/UserApi";
+import useNotify from "src/composables/UseNotify";
 
 export default defineComponent({
   name: "PageCategory",
@@ -95,7 +95,7 @@ export default defineComponent({
       title: "Categories",
       loading: true,
       resource: "categories",
-      routeForm: "form-category",
+      routeName: "form-category",
       list: [],
     });
 
@@ -111,7 +111,7 @@ export default defineComponent({
     };
 
     const handleEdit = (row) => {
-      router.push({ name: data.routeForm, params: { id: row.id } });
+      router.push({ name: data.routeName, params: { id: row.id } });
     };
 
     const handleRemove = async (row) => {

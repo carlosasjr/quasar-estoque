@@ -90,8 +90,8 @@ import { useRouter } from "vue-router";
 import { useQuasar, openURL, copyToClipboard } from "quasar";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
-import { columns } from "./ColumnsTable";
 import useAuthUser from "src/composables/UseAuthUser";
+import { columns } from "./ColumnsTable";
 
 export default defineComponent({
   name: "PageProduct",
@@ -102,9 +102,9 @@ export default defineComponent({
 
     const { notifyError, notifySuccess } = useNotify();
     const { listByUser, remove } = useApi();
+    const { user } = useAuthUser();
     const router = useRouter();
     const $q = useQuasar();
-    const { user } = useAuthUser();
 
     const data = reactive({
       title: "Products",
@@ -117,7 +117,7 @@ export default defineComponent({
     const handleList = async () => {
       try {
         data.loading = true;
-        data.list = await listByUser(data.resource, user.value.id);
+        data.list = await listByUser(data.resource);
       } catch (error) {
         notifyError(error.message);
       } finally {

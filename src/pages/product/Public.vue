@@ -1,6 +1,22 @@
 <template>
   <q-page padding>
     <div class="row">
+      <q-select
+        dense
+        class="col-12"
+        outlined
+        label="Category"
+        v-model="data.categoryId"
+        :options="data.optionsCategories"
+        option-value="id"
+        option-label="name"
+        map-options
+        emit-value
+        clearable
+        @update:model-value="handleList"
+      >
+      </q-select>
+
       <q-table
         grid
         hide-pagination
@@ -92,9 +108,8 @@ export default defineComponent({
 
   setup() {
     onMounted(() => {
-      if (route.params.id) {
-        handleList(route.params.id);
-      }
+      handleListCagegories();
+      handleList();
     });
 
     const { notifyError } = useNotify();
@@ -107,19 +122,35 @@ export default defineComponent({
       resource: "products",
       routeName: "form-product",
       list: [],
+      categoryId: "",
+      optionsCategories: [],
       filter: "",
       showDialogDetails: false,
       productDetails: {},
     });
 
-    const handleList = async (userId) => {
+    const handleList = async () => {
       try {
         data.loading = true;
-        data.list = await listByUser(data.resource, userId);
+        if (data.categoryId) {
+          data.list = await listByUser(
+            data.resource,
+            "category_id",
+            data.categoryId
+          );
+        } else data.list = await listByUser(data.resource);
       } catch (error) {
         notifyError(error.message);
       } finally {
         data.loading = false;
+      }
+    };
+
+    const handleListCagegories = async () => {
+      try {
+        data.optionsCategories = await listByUser("categories");
+      } catch (error) {
+        notifyError(error.message);
       }
     };
 
@@ -133,6 +164,7 @@ export default defineComponent({
       data,
       formatCurrency,
       handleShowDetails,
+      handleList,
     };
   },
 });

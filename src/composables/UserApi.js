@@ -28,11 +28,14 @@ export default function useApi() {
     return data;
   };
 
-  const listByUser = async (table, user_id) => {
+  const listByUser = async (table, columnFilter = "", filter = "") => {
+    const id = route.params.id || user?.value?.id;
+
     const { data, error } = await supabase
       .from(table)
       .select("*")
-      .eq("user_id", user_id);
+      .eq("user_id", id)
+      .eq(columnFilter, filter);
 
     if (error) throw error;
 

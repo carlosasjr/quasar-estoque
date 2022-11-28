@@ -72,7 +72,7 @@ export default defineComponent({
     });
 
     const { notifyError, notifySuccess } = useNotify();
-    const { list, remove } = useApi();
+    const { listByUser, remove } = useApi();
     const router = useRouter();
     const $q = useQuasar();
 
@@ -87,7 +87,7 @@ export default defineComponent({
     const handleList = async () => {
       try {
         data.loading = true;
-        data.list = await list(data.resource);
+        data.list = await listByUser(data.resource);
       } catch (error) {
         notifyError(error.message);
       } finally {

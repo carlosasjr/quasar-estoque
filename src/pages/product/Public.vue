@@ -19,6 +19,7 @@
 
       <q-table
         grid
+        v-model:pagination="initialPagination"
         hide-pagination
         :rows="data.list"
         :columns="columns"
@@ -88,13 +89,22 @@
         @hideDialog="data.showDialogDetails = false"
       />
     </div>
+
+    <div class="row justify-center">
+      <q-pagination
+        v-model="initialPagination.page"
+        :max="pagesNumber"
+        direction-links
+        @update:model-value="handleScroolToTop"
+      />
+    </div>
   </q-page>
 </template>
 <script>
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive, onMounted, computed } from "vue";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
-import { columns } from "./ColumnsTable";
+import { columns, initialPagination } from "./ColumnsTable";
 import { useRoute } from "vue-router";
 import { formatCurrency } from "src/utils/format";
 import DialogProductDetails from "components/DialogProductDetails.vue";
@@ -159,12 +169,21 @@ export default defineComponent({
       data.showDialogDetails = true;
     };
 
+    const handleScroolToTop = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return {
       columns,
+      initialPagination,
       data,
       formatCurrency,
       handleShowDetails,
       handleList,
+      handleScroolToTop,
+      pagesNumber: computed(() =>
+        Math.ceil(data.list.length / initialPagination.value.rowsPerPage)
+      ),
     };
   },
 });

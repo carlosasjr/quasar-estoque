@@ -92,7 +92,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const { post, getById, update, list, uploadImg } = useApi();
+    const { post, getById, update, listByUser, uploadImg } = useApi();
     const { notifyError, notifySuccess } = useNotify();
 
     const isUpdate = computed(() => route.params.id);
@@ -123,7 +123,7 @@ export default defineComponent({
     });
 
     const handleListCategories = async () => {
-      data.optionsCategory = await list("categories");
+      data.optionsCategory = await listByUser("categories");
     };
 
     const handleGet = async (id) => {

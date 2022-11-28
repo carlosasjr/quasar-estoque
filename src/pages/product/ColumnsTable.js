@@ -1,4 +1,5 @@
 import { formatCurrency } from "src/utils/format";
+import { ref } from "vue";
 
 const columns = [
   {
@@ -48,4 +49,9 @@ const columns = [
   },
 ];
 
-export { columns };
+const initialPagination = ref({
+  page: 1,
+  rowsPerPage: 5,
+});
+
+export { columns, initialPagination };

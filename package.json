@@ -2,7 +2,7 @@
   "name": "quasar-estoque",
   "version": "0.0.1",
   "description": "A Quasar Project with Supabase",
-  "productName": "Quasar App",
+  "productName": "Quasar App Supabase",
   "author": "carlos <carlosasjr2003@hotmail.com>",
   "private": true,
   "scripts": {

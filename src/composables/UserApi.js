@@ -18,6 +18,7 @@ export default function useApi() {
     primary: "",
     secondary: "",
     phone: "",
+    paralax_url: "",
   });
 
   const list = async (table) => {
@@ -64,6 +65,7 @@ export default function useApi() {
 
       if (data.length > 0) {
         brand.value = data[0];
+
         setBrand(brand.value.primary, brand.value.secondary);
       }
 

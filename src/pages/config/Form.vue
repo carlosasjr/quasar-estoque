@@ -9,6 +9,14 @@
         @submit.prevent="handleSubmit"
       >
         <q-input
+          type="file"
+          accept="image/*"
+          label="Paralax"
+          stack-label
+          v-model="data.image"
+        />
+
+        <q-input
           label="Store Name"
           v-model="data.form.name"
           lazy-rules
@@ -65,7 +73,7 @@ export default defineComponent({
   name: "FormConfig",
 
   setup() {
-    const { post, getBrand, update } = useApi();
+    const { post, getBrand, update, uploadImg } = useApi();
     const { notifyError, notifySuccess } = useNotify();
     const router = useRouter();
     const { setBrand } = useBrand();
@@ -79,12 +87,14 @@ export default defineComponent({
       loading: false,
       resource: "config",
       routeName: "me",
+      image: [],
       form: {
         id: "",
         name: "",
         primary: "",
         secondary: "",
         phone: "",
+        paralax_url: "",
       },
     });
 
@@ -99,6 +109,12 @@ export default defineComponent({
     const handleSubmit = async () => {
       try {
         data.loading = true;
+
+        if (data.image.length > 0) {
+          const imgUrl = await uploadImg(data.image[0], "paralax");
+
+          data.form.paralax_url = imgUrl;
+        }
 
         if (data.form.id !== "") {
           await update(data.resource, data.form);

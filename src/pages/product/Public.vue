@@ -66,11 +66,7 @@
                 </q-card-section>
               </q-card>
             </div>
-            <div
-              class="col-12"
-              v-if="props.rowIndex === 3 && brand.paralax_url"
-              key="paralax"
-            >
+            <div class="col-12" v-if="props.rowIndex === 3" key="paralax">
               <q-parallax :height="200" :speed="0.5">
                 <template v-slot:media>
                   <img :src="brand.paralax_url" />
@@ -105,7 +101,6 @@ import { defineComponent, reactive, onMounted, computed } from "vue";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
 import { columns, initialPagination } from "./ColumnsTable";
-import { useRoute } from "vue-router";
 import { formatCurrency } from "src/utils/format";
 import DialogProductDetails from "components/DialogProductDetails.vue";
 
@@ -117,14 +112,14 @@ export default defineComponent({
   },
 
   setup() {
+    const { notifyError } = useNotify();
+    const { getBrand, listByUser, brand } = useApi();
+
     onMounted(() => {
+      getBrand();
       handleListCagegories();
       handleList();
     });
-
-    const { notifyError } = useNotify();
-    const { listByUser } = useApi();
-    const route = useRoute();
 
     const data = reactive({
       title: "Products",
@@ -177,6 +172,7 @@ export default defineComponent({
       columns,
       initialPagination,
       data,
+      brand,
       formatCurrency,
       handleShowDetails,
       handleList,

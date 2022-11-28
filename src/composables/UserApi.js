@@ -1,10 +1,24 @@
 import useSupabase from "src/boot/supabase";
 import useAuthUser from "./UseAuthUser";
+import useBrand from "./useBrand";
 import { uid } from "quasar";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { useQuasar } from "quasar";
 
 export default function useApi() {
   const { supabase } = useSupabase();
   const { user } = useAuthUser();
+  const { setBrand } = useBrand();
+  const route = useRoute();
+  const $q = useQuasar();
+
+  const brand = ref({
+    name: "",
+    primary: "",
+    secondary: "",
+    phone: "",
+  });
 
   const list = async (table) => {
     const { data, error } = await supabase.from(table).select("*");
@@ -31,6 +45,29 @@ export default function useApi() {
     if (error) throw error;
 
     return data[0];
+  };
+
+  const getBrand = async () => {
+    const id = route.params.id || user?.value?.id;
+
+    if (id) {
+      $q.loading.show();
+      let { data, error } = await supabase
+        .from("config")
+        .select("*")
+        .eq("user_id", id);
+
+      if (error) throw error;
+
+      if (data.length > 0) {
+        brand.value = data[0];
+        setBrand(brand.value.primary, brand.value.secondary);
+      }
+
+      $q.loading.hide();
+
+      return data[0];
+    }
   };
 
   const post = async (table, formData) => {
@@ -90,9 +127,11 @@ export default function useApi() {
     list,
     listByUser,
     getById,
+    getBrand,
     post,
     update,
     remove,
     uploadImg,
+    brand,
   };
 }

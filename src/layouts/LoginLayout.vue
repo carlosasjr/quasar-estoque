@@ -2,7 +2,8 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title> Quasar Estoque </q-toolbar-title>
+        <q-toolbar-title v-if="brand.name"> {{ brand.name }} </q-toolbar-title>
+        <q-toolbar-title v-else> Quasar Estoque </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -13,15 +14,22 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
+import useApi from "src/composables/UserApi";
 
 export default defineComponent({
   name: "LoginLayout",
 
-  components: {},
-
   setup() {
-    return {};
+    const { getBrand, brand } = useApi();
+
+    onMounted(() => {
+      getBrand();
+    });
+
+    return {
+      brand,
+    };
   },
 });
 </script>

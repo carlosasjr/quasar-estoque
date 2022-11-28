@@ -11,7 +11,8 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Estoque </q-toolbar-title>
+        <q-toolbar-title v-if="brand.name"> {{ brand.name }} </q-toolbar-title>
+        <q-toolbar-title v-else> My Store </q-toolbar-title>
 
         <q-btn-dropdown flat color="white" icon="person">
           <q-list>
@@ -44,11 +45,12 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 import useAuthUser from "src/composables/UseAuthUser";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import useApi from "src/composables/UserApi";
 
 const linksList = [
   {
@@ -66,6 +68,12 @@ const linksList = [
     icon: "store",
     to: "product",
   },
+
+  {
+    title: "Config",
+    icon: "mdi-cog",
+    to: "form-config",
+  },
 ];
 
 export default defineComponent({
@@ -80,6 +88,11 @@ export default defineComponent({
     const router = useRouter();
     const leftDrawerOpen = ref(false);
     const $q = useQuasar();
+    const { getBrand, brand } = useApi();
+
+    onMounted(() => {
+      getBrand();
+    });
 
     const handleLogout = async () => {
       $q.dialog({
@@ -100,6 +113,7 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
       handleLogout,
+      brand,
     };
   },
 });

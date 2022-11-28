@@ -19,6 +19,16 @@
             @click="handleGoToMyStore"
             icon="store"
           />
+
+          <q-btn
+            label="Copy Link"
+            dense
+            size="sm"
+            outline
+            class="q-ml-sm"
+            @click="handleCopyPublicUrl"
+            icon="content_copy"
+          />
           <q-space />
           <q-btn
             v-if="$q.platform.is.desktop"
@@ -77,7 +87,7 @@
 <script>
 import { defineComponent, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
+import { useQuasar, openURL, copyToClipboard } from "quasar";
 import useApi from "src/composables/UserApi";
 import useNotify from "src/composables/UseNotify";
 import { columns } from "./ColumnsTable";
@@ -137,7 +147,31 @@ export default defineComponent({
     };
 
     const handleGoToMyStore = () => {
-      router.push({ name: "product-public", params: { id: user.value.id } });
+      // router.push({ name: "product-public", params: { id: user.value.id } });
+
+      const link = router.resolve({
+        name: "product-public",
+        params: { id: user.value.id },
+      });
+
+      openURL(window.origin + link.href);
+    };
+
+    const handleCopyPublicUrl = () => {
+      const link = router.resolve({
+        name: "product-public",
+        params: { id: user.value.id },
+      });
+
+      const externalLink = window.origin + link.href;
+
+      copyToClipboard(externalLink)
+        .then(() => {
+          notifySuccess("Successfully copied");
+        })
+        .catch(() => {
+          notifyError("Error copied link");
+        });
     };
 
     return {
@@ -146,6 +180,7 @@ export default defineComponent({
       handleEdit,
       handleRemove,
       handleGoToMyStore,
+      handleCopyPublicUrl,
     };
   },
 });

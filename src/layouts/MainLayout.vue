@@ -54,7 +54,7 @@ import useApi from "src/composables/UserApi";
 
 const linksList = [
   {
-    title: "Hoje",
+    title: "Home",
     icon: "home",
     to: "me",
   },

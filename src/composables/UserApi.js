@@ -6,20 +6,20 @@ import { useRoute } from "vue-router";
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 
+const brand = ref({
+  name: "",
+  primary: "",
+  secondary: "",
+  phone: "",
+  paralax_url: "",
+});
+
 export default function useApi() {
   const { supabase } = useSupabase();
   const { user } = useAuthUser();
   const { setBrand } = useBrand();
   const route = useRoute();
   const $q = useQuasar();
-
-  const brand = ref({
-    name: "",
-    primary: "",
-    secondary: "",
-    phone: "",
-    paralax_url: "",
-  });
 
   const list = async (table) => {
     const { data, error } = await supabase.from(table).select("*");
@@ -129,6 +129,7 @@ export default function useApi() {
   };
 
   return {
+    brand,
     list,
     listByUser,
     getById,
@@ -137,6 +138,5 @@ export default function useApi() {
     update,
     remove,
     uploadImg,
-    brand,
   };
 }

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive } from "vue";
+import { defineComponent } from "vue";
 import { formatCurrency } from "src/utils/format";
 import { openURL } from "quasar";
 import useApi from "src/composables/UserApi";

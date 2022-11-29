@@ -43,6 +43,19 @@ export default function useApi() {
     return data;
   };
 
+  const fetchCount = async (table) => {
+    const id = route.params.id || user?.value?.id;
+
+    const { data, error, count } = await supabase
+      .from(table)
+      .select("*", { count: "exact" })
+      .eq("user_id", id);
+
+    if (error) throw error;
+
+    return { data, count };
+  };
+
   const getById = async (table, id) => {
     let { data, error } = await supabase.from(table).select("*").eq("id", id);
 
@@ -132,6 +145,7 @@ export default function useApi() {
     brand,
     list,
     listByUser,
+    fetchCount,
     getById,
     getBrand,
     post,

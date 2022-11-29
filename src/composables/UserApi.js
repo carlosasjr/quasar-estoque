@@ -1,10 +1,9 @@
 import useSupabase from "src/boot/supabase";
 import useAuthUser from "./UseAuthUser";
 import useBrand from "./useBrand";
-import { uid } from "quasar";
+import { useQuasar, uid } from "quasar";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
-import { useQuasar } from "quasar";
 
 const brand = ref({
   name: "",

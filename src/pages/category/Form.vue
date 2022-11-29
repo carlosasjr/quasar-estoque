@@ -22,6 +22,7 @@
           class="full-width"
           rounded
           :loading="data.loading"
+          :disable="data.loading"
         >
           <template v-slot:loading>
             <q-spinner-hourglass class="on-left" />

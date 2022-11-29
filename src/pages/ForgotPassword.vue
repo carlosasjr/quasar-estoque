@@ -7,7 +7,7 @@
         <q-input
           type="email"
           label="Email"
-          v-model="data.email"
+          v-model="data.form.email"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']"
         />
@@ -20,7 +20,14 @@
             rounded
             size="lg"
             type="submit"
-          />
+            :loading="data.loading"
+            :disable="data.loading"
+          >
+            <template v-slot:loading>
+              <q-spinner-hourglass class="on-left" />
+              Loading...
+            </template>
+          </q-btn>
 
           <q-btn
             label="Back"
@@ -53,18 +60,24 @@ export default defineComponent({
     const router = useRouter();
 
     const data = reactive({
-      email: "",
+      loading: false,
+      form: {
+        email: "",
+      },
     });
 
     const handleForgot = async () => {
       try {
-        await sendPasswordRestEmail(data.email);
-        notifySuccess(`Send email to ${data.email}`);
+        data.loading = true;
+        await sendPasswordRestEmail(data.form.email);
+        notifySuccess(`Send email to ${data.form.email}`);
         router.replace({
           name: "login",
         });
       } catch (error) {
         notifyError(error.message);
+      } finally {
+        data.loading = false;
       }
     };
 

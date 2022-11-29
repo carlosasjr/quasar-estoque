@@ -7,7 +7,7 @@
         <q-input
           type="password"
           label="New Password"
-          v-model="data.newPassword"
+          v-model="data.form.newPassword"
           lazy-rules
           :rules="[
             (val) => (val && val.length > 0) || 'Password is required',
@@ -25,7 +25,14 @@
             rounded
             size="lg"
             type="submit"
-          />
+            :loading="data.loading"
+            :disable="data.loading"
+          >
+            <template v-slot:loading>
+              <q-spinner-hourglass class="on-left" />
+              Loading...
+            </template>
+          </q-btn>
         </div>
       </div>
     </q-form>
@@ -49,12 +56,16 @@ export default defineComponent({
     const token = route.query.token;
 
     const data = reactive({
-      newPassword: "",
+      loading: false,
+      form: {
+        newPassword: "",
+      },
     });
 
     const handleResetPassword = async () => {
       try {
-        await resetPassword(token, data.newPassword);
+        data.loading = true;
+        await resetPassword(token, data.form.newPassword);
         notifySuccess("New password create successfully");
 
         router.replace({
@@ -62,6 +73,8 @@ export default defineComponent({
         });
       } catch (error) {
         notifyError(error.message);
+      } finally {
+        data.loading = false;
       }
     };
 

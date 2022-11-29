@@ -7,14 +7,14 @@
         <q-input
           type="email"
           label="Email"
-          v-model="data.email"
+          v-model="data.form.email"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Email is required']"
         />
         <q-input
           type="password"
           label="Senha"
-          v-model="data.password"
+          v-model="data.form.password"
           lazy-rules
           :rules="[(val) => (val && val.length > 0) || 'Password is required']"
         />
@@ -27,7 +27,14 @@
             rounded
             size="lg"
             type="submit"
-          />
+            :loading="data.loading"
+            :disable="data.loading"
+          >
+            <template v-slot:loading>
+              <q-spinner-hourglass class="on-left" />
+              Loading...
+            </template>
+          </q-btn>
         </div>
 
         <div class="full-width q-gutter-y-sm">
@@ -77,17 +84,23 @@ export default defineComponent({
     const { notifyError, notifySuccess } = useNotify();
 
     const data = reactive({
-      email: "",
-      password: "",
+      loading: false,
+      form: {
+        email: "",
+        password: "",
+      },
     });
 
     const handleLogin = async () => {
       try {
-        await login(data);
+        data.loading = true;
+        await login(data.form);
         notifySuccess("Login successfully!");
         router.push({ name: "me" });
       } catch (error) {
         notifyError(error.message);
+      } finally {
+        data.loading = false;
       }
     };
 

@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card" bordered v-riplle:primary>
+  <q-card class="my-card" bordered v-ripple:primary>
     <q-skeleton animation="pulse-x" height="50px" v-if="data.load" />
     <q-card-section horizontal v-else>
       <div class="col flex flex-center text-h5">

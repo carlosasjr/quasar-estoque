@@ -14,6 +14,8 @@
         <q-toolbar-title v-if="brand.name"> {{ brand.name }} </q-toolbar-title>
         <q-toolbar-title v-else> My Store </q-toolbar-title>
 
+        <dark-mode-toggle />
+
         <q-btn-dropdown flat color="white" icon="person">
           <q-list>
             <q-item clickable v-close-popup>
@@ -51,6 +53,7 @@ import useAuthUser from "src/composables/UseAuthUser";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import useApi from "src/composables/UserApi";
+import DarkModeToggle from "src/components/DarkModeToggle.vue";
 
 const linksList = [
   {
@@ -81,6 +84,7 @@ export default defineComponent({
 
   components: {
     EssentialLink,
+    DarkModeToggle,
   },
 
   setup() {
